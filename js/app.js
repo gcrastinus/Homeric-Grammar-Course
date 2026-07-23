@@ -151,7 +151,7 @@
 
         <div class="welcome-intro">
           <p>You already know New Testament Greek essentials. This app adds only what you need to ramp up quickly into Homeric morphology, dialect, and Odyssey vocabulary — short cards, immediate questions, no grades.</p>
-          <p>Work the grammar path, drill core vocab (five-day plan), orient yourself on the map, then read real Odyssey lines with help.</p>
+          <p>Work the grammar path, drill core vocab (two-week mastery track), orient yourself on the map, then read real Odyssey lines with help.</p>
         </div>
 
         <div class="module-grid">
@@ -189,7 +189,7 @@
           <button class="module-card" data-go="vocab">
             <div class="mod-greek">λέξεις</div>
             <h3>Core Homeric Vocabulary</h3>
-            <p>≈${vTotal} high-value Odyssey words (not NT staples). Five-day mastery + example lines with blanks.</p>
+            <p>≈${vTotal} high-value Odyssey words (not NT staples). Two-week directed track + example lines with blanks.</p>
             <span class="progress-pill">${vDone} marked mastered</span>
           </button>
 
@@ -359,46 +359,202 @@
     }
   }
 
-  // ——— Vocab ———
+  // ——— Vocab (two-week directed mastery track) ———
+  const VT = typeof VOCAB_TRACK !== "undefined" ? VOCAB_TRACK : {
+    newPerDay: 20, reviewEveryN: 5, endQuizSize: 5, targetDays: 14
+  };
+
+  function todayStr() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  function ensureVocabTrack(s) {
+    const def = HGStorage.defaultState().vocabTrack;
+    if (!s.vocabTrack || typeof s.vocabTrack !== "object") {
+      s.vocabTrack = { ...def };
+    } else {
+      s.vocabTrack = { ...def, ...s.vocabTrack };
+      if (!s.vocabTrack.weak || typeof s.vocabTrack.weak !== "object") s.vocabTrack.weak = {};
+      if (!Array.isArray(s.vocabTrack.queue)) s.vocabTrack.queue = [];
+    }
+    return s.vocabTrack;
+  }
+
+  function getTrack() {
+    ensureVocabTrack(state);
+    return state.vocabTrack;
+  }
+
+  /** Roll calendar day fields if the last activity was on a previous date. */
+  function rollTrackDayIfNeeded(t) {
+    const today = todayStr();
+    if (t.lastDate !== today) {
+      t.lastDate = today;
+      t.newDoneToday = 0;
+      t.reviewClearedToday = false;
+    }
+  }
+
   function masteryStats() {
     const mastered = state.vocabMastered || {};
     const n = Object.keys(mastered).filter(k => mastered[k]).length;
     return { n, total: VOCAB.length, pct: Math.round((n / VOCAB.length) * 100) };
   }
 
+  function trackProgress() {
+    const t = getTrack();
+    const introduced = Math.min(t.cursor || 0, VOCAB.length);
+    const mastered = masteryStats().n;
+    const weakN = Object.keys(t.weak || {}).filter(k => t.weak[k]).length;
+    return { introduced, mastered, weakN, total: VOCAB.length, cursor: t.cursor || 0 };
+  }
+
+  function wordByLemma(lemma) {
+    return VOCAB.find(w => w.lemma === lemma);
+  }
+
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  /** Words already introduced in the track that still need review. */
+  function weakReviewPool(t) {
+    const out = [];
+    const seen = new Set();
+    // Prefer explicit weak marks
+    Object.keys(t.weak || {}).forEach(lemma => {
+      if (t.weak[lemma] && wordByLemma(lemma) && !seen.has(lemma)) {
+        seen.add(lemma);
+        out.push(lemma);
+      }
+    });
+    // Also unmastered words already past the cursor (introduced)
+    for (let i = 0; i < (t.cursor || 0) && i < VOCAB.length; i++) {
+      const w = VOCAB[i];
+      if (!w) continue;
+      if (state.vocabMastered && state.vocabMastered[w.lemma]) continue;
+      if (seen.has(w.lemma)) continue;
+      seen.add(w.lemma);
+      out.push(w.lemma);
+    }
+    return out;
+  }
+
+  function hasPendingDailyReview(t) {
+    rollTrackDayIfNeeded(t);
+    if (t.reviewClearedToday) return false;
+    if ((t.cursor || 0) <= 0) return false;
+    return weakReviewPool(t).length > 0;
+  }
+
+  function buildReviewQueue(t) {
+    return shuffle(weakReviewPool(t)).map(lemma => ({ lemma, kind: "review" }));
+  }
+
+  function buildNewQueue(t, count) {
+    const q = [];
+    let c = t.cursor || 0;
+    while (q.length < count && c < VOCAB.length) {
+      q.push({ lemma: VOCAB[c].lemma, kind: "new" });
+      c++;
+    }
+    return q;
+  }
+
+  function updateTrack(fn) {
+    state = HGStorage.update(s => {
+      ensureVocabTrack(s);
+      rollTrackDayIfNeeded(s.vocabTrack);
+      fn(s.vocabTrack, s);
+    });
+    return state.vocabTrack;
+  }
+
   function viewVocabHome() {
+    // Ensure calendar fields roll and persist when opening the track home
+    updateTrack(() => {});
+    const t = getTrack();
     const { n, total, pct } = masteryStats();
-    const days = VOCAB_DAYS.map(d => {
-      const words = vocabByDay(d.day);
-      const m = words.filter(w => state.vocabMastered && state.vocabMastered[w.lemma]).length;
-      return `
-        <button class="day-card" data-go="vocab-day/${d.day}">
-          <div class="day-label">Day ${d.day}</div>
-          <div class="day-count">${d.title}</div>
-          <div class="day-count">${words.length} words</div>
-          <div class="day-mastered">${m} mastered</div>
-        </button>
-      `;
-    }).join("");
+    const prog = trackProgress();
+    const started = t.started || prog.cursor > 0;
+    const midSession = t.phase && t.phase !== "idle" && t.phase !== "day-done" &&
+      Array.isArray(t.queue) && t.queue.length > 0 && t.queueIndex < t.queue.length;
+    const pendingReview = hasPendingDailyReview(t);
+    const newLeftToday = Math.max(0, VT.newPerDay - (t.newDoneToday || 0));
+    const allIntroduced = prog.cursor >= total;
+    const idealPace = Math.ceil(total / VT.newPerDay);
+
+    let launchLabel = "Begin vocabulary track";
+    let launchHint = `About ${VT.newPerDay} new words per study day · ideal pace ~${idealPace} days (two-week target).`;
+    if (midSession) {
+      launchLabel = "Resume session";
+      launchHint = "Pick up the cards you were working through.";
+    } else if (started && !allIntroduced) {
+      launchLabel = "Continue where you left off";
+      launchHint = pendingReview
+        ? "You’ll review weak cards first, then new words for today."
+        : (newLeftToday > 0
+          ? `About ${newLeftToday} new words left in today’s set (you can keep going after).`
+          : "Today’s core set is done — open to review, keep going, or stop.");
+    } else if (allIntroduced) {
+      launchLabel = "Review & reinforce";
+      launchHint = "All core words have been introduced. Keep reviewing until they’re mastered.";
+    }
 
     return shell(`
       <div class="vocab-home">
         <h2>Core Homeric Vocabulary</h2>
-        <p class="muted">Focused on high-frequency Odyssey words that NT readers usually have <em>not</em> drilled (no καί, no λόγος). Lexical form on the card; Homeric line may show an inflected form. English line blanks the target sense.</p>
+        <p class="muted">≈${total} high-frequency Odyssey words NT readers usually have <em>not</em> drilled (no καί, no λόγος). Directed track below; thematic scenes are separate.</p>
+
         <div class="mastery-bar-wrap">
           <div class="mastery-bar-label">
-            <span>Five-day mastery progress</span>
-            <span>${n} / ${total} (${pct}%)</span>
+            <span>Two-week mastery track</span>
+            <span>${n} mastered · ${prog.introduced} / ${total} introduced (${pct}%)</span>
           </div>
-          <div class="mastery-bar"><div class="mastery-bar-fill" style="width:${pct}%"></div></div>
+          <div class="mastery-bar"><div class="mastery-bar-fill" style="width:${Math.round((prog.introduced / total) * 100)}%"></div></div>
         </div>
-        <div class="day-grid">${days}</div>
-        <div class="nav-row">
-          <button class="btn btn-primary" data-go="vocab-quiz">Quiz path (mixed)</button>
-          <button class="btn btn-ghost" data-go="thematic">Thematic scenes →</button>
+
+        <section class="vocab-track-panel">
+          <h3 class="vocab-track-title">Directed course of study</h3>
+          <p class="muted vocab-track-lead">${launchHint}</p>
+          <div class="vocab-track-stats">
+            <span><strong>${prog.introduced}</strong> introduced</span>
+            <span><strong>${n}</strong> mastered</span>
+            <span><strong>${prog.weakN}</strong> still shaky</span>
+            <span>Today’s new: <strong>${t.newDoneToday || 0}</strong> / ${VT.newPerDay}</span>
+          </div>
+
+          <div class="vocab-launch-row">
+            <button type="button" class="btn btn-primary btn-launch" id="vocab-launch">${launchLabel}</button>
+          </div>
+
+          ${pendingReview ? `
+            <div class="vocab-review-offer">
+              <button type="button" class="btn btn-soft" id="vocab-daily-review">Review cards you’ve already studied</button>
+              <p class="muted" style="font-size:0.85rem;margin:0.4rem 0 0">Optional warm-up. Disappears for today once finished; returns tomorrow.</p>
+            </div>
+          ` : ""}
+
+          <div class="vocab-track-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="vocab-track-reset">Reset track</button>
+          </div>
+        </section>
+
+        <div class="nav-row mt-2">
           <button class="btn btn-soft" data-go="vocab-browse">Browse all cards</button>
+          <button class="btn btn-soft" data-go="vocab-quiz">Mixed quiz</button>
+          <button class="btn btn-ghost" data-go="thematic">Thematic scenes →</button>
         </div>
-        <p class="mt-2 muted">Ideal pace: one day-list per study day, then mixed quiz. Mark “Got it” only when you can supply the gloss from the Greek lemma alone.</p>
+        <p class="mt-2 muted">Mark “Got it” when you can supply the gloss from the lemma alone. The track keeps going past two weeks if you need more review — the two-week frame is a target, not a lockout.</p>
       </div>
     `, { vocabBtn: false });
   }
@@ -411,11 +567,14 @@
       `<span class="blank" data-blank data-answer="${answer}">______</span>`);
     const grk = underlineTarget(ex.greek || "", word.lemma);
     const lexical = formatLexical(word);
+    const isReview = opts.kind === "review";
+    const cardClass = isReview ? "vocab-card vocab-card--review" : "vocab-card";
     return `
-      <div class="vocab-card" data-lemma="${word.lemma}">
+      <div class="${cardClass}" data-lemma="${word.lemma}" data-kind="${opts.kind || "new"}">
+        ${isReview ? `<div class="vocab-review-badge">Review card</div>` : ""}
         <div class="lemma greek">${word.lemma}</div>
         <div class="lexical-entry">${lexical}</div>
-        <div class="gloss" style="${opts.hideGloss ? "filter:blur(5px)" : ""}" data-gloss>${word.gloss} <span class="gloss-day">(from Day ${word.day})</span></div>
+        <div class="gloss" style="${opts.hideGloss ? "filter:blur(5px)" : ""}" data-gloss>${word.gloss}</div>
         <div class="example-line">
           <div class="cite">${ex.ref || ""}</div>
           <div class="grk">${grk}</div>
@@ -424,7 +583,10 @@
         <div class="nav-row mt-2">
           ${opts.hideGloss ? `<button class="btn btn-soft btn-sm" data-show-gloss>Reveal gloss</button>` : ""}
           <button class="btn btn-soft btn-sm" data-show-blank>Show blank answer</button>
-          <button class="btn btn-primary btn-sm" data-master="${word.lemma}">${mastered ? "Unmark" : "Got it"}</button>
+          ${opts.trackMode
+            ? `<button class="btn btn-primary btn-sm" data-track-gotit="${word.lemma}">Got it</button>
+               <button class="btn btn-soft btn-sm" data-track-again="${word.lemma}">Still learning</button>`
+            : `<button class="btn btn-primary btn-sm" data-master="${word.lemma}">${mastered ? "Unmark" : "Got it"}</button>`}
         </div>
       </div>
     `;
@@ -459,67 +621,531 @@
         const lemma = btn.dataset.master;
         state = HGStorage.update(s => {
           s.vocabMastered[lemma] = !s.vocabMastered[lemma];
+          ensureVocabTrack(s);
+          if (s.vocabMastered[lemma]) {
+            delete s.vocabTrack.weak[lemma];
+          } else {
+            s.vocabTrack.weak[lemma] = true;
+          }
         });
-        // soft refresh current route
         const r = state.lastRoute || "vocab";
         go(r);
       });
     });
   }
 
-  function viewVocabDay(day) {
-    day = +day;
-    const meta = VOCAB_DAYS.find(d => d.day === day);
-    const words = vocabByDay(day);
-    // study one at a time via index in hash query — use simple carousel with local index in route vocab-day/1/0
+  function bindVocabHome() {
+    const launch = app.querySelector("#vocab-launch");
+    if (launch) {
+      launch.addEventListener("click", () => {
+        beginOrResumeSession({ forceReviewOnly: false });
+        go("vocab-study");
+      });
+    }
+    const daily = app.querySelector("#vocab-daily-review");
+    if (daily) {
+      daily.addEventListener("click", () => {
+        beginOrResumeSession({ forceReviewOnly: true });
+        go("vocab-study");
+      });
+    }
+    const reset = app.querySelector("#vocab-track-reset");
+    if (reset) {
+      reset.addEventListener("click", () => {
+        if (!confirm("Reset the directed vocabulary track? Mastered marks stay unless you reset all progress from Home.")) {
+          return;
+        }
+        updateTrack((t, s) => {
+          const def = HGStorage.defaultState().vocabTrack;
+          Object.keys(def).forEach(k => { t[k] = def[k]; });
+          t.weak = {};
+          t.queue = [];
+          // Clear only track-related weak; keep vocabMastered / optional clear seen for track words
+        });
+        go("vocab");
+      });
+    }
+  }
+
+  /**
+   * Start or resume a study session.
+   * forceReviewOnly: daily-review button (review queue only, then mark review cleared).
+   */
+  function beginOrResumeSession(opts = {}) {
+    const forceReviewOnly = !!opts.forceReviewOnly;
+    updateTrack((t, s) => {
+      t.started = true;
+      rollTrackDayIfNeeded(t);
+
+      // Resume mid-queue if present and not forcing a fresh review-only session
+      if (!forceReviewOnly && t.queue && t.queue.length && t.queueIndex < t.queue.length &&
+          (t.phase === "review" || t.phase === "new" || t.phase === "keep-going")) {
+        return;
+      }
+
+      if (forceReviewOnly) {
+        const rq = buildReviewQueue(t);
+        t.queue = rq.length ? rq : [];
+        t.queueIndex = 0;
+        t.phase = rq.length ? "review" : "day-done";
+        t.keepGoingStreak = 0;
+        t._reviewOnly = true;
+        t._reviewLen = rq.length;
+        if (!rq.length) t.reviewClearedToday = true;
+        return;
+      }
+
+      t._reviewOnly = false;
+
+      // Full session: review (if needed) then new cards for the day
+      const parts = [];
+      if (hasPendingDailyReview(t)) {
+        parts.push(...buildReviewQueue(t));
+      }
+      const newLeft = Math.max(0, VT.newPerDay - (t.newDoneToday || 0));
+      const newQ = buildNewQueue(t, newLeft);
+      // Tag phase by first segment: if review items first, phase review; else new
+      const reviewCount = parts.length;
+      parts.push(...newQ);
+
+      if (parts.length === 0) {
+        // Nothing left in daily allotment — offer day-done (keep going / stop)
+        t.queue = [];
+        t.queueIndex = 0;
+        t.phase = "day-done";
+        t.keepGoingStreak = 0;
+        t._reviewLen = 0;
+        return;
+      }
+
+      t.queue = parts;
+      t.queueIndex = 0;
+      t.phase = reviewCount > 0 ? "review" : "new";
+      t.keepGoingStreak = 0;
+      // Remember how many leading items are review for phase transitions
+      t._reviewLen = reviewCount;
+    });
+  }
+
+  function currentQueueItem() {
+    const t = getTrack();
+    if (!t.queue || t.queueIndex >= t.queue.length) return null;
+    return t.queue[t.queueIndex];
+  }
+
+  function markLemmaResult(lemma, gotIt) {
+    updateTrack((t, s) => {
+      s.vocabSeen[lemma] = true;
+      if (gotIt) {
+        s.vocabMastered[lemma] = true;
+        delete t.weak[lemma];
+      } else {
+        t.weak[lemma] = true;
+        // do not un-master if previously mastered and they hit still learning — allow re-weak
+        if (s.vocabMastered[lemma]) {
+          // keep mastered but also weak? Prefer clear mastered when still learning
+          s.vocabMastered[lemma] = false;
+        }
+      }
+    });
+  }
+
+  function advanceAfterCard(gotIt) {
+    const item = currentQueueItem();
+    if (!item) return;
+    markLemmaResult(item.lemma, gotIt);
+
+    updateTrack((t, s) => {
+      const kind = item.kind;
+      const reviewLen = t._reviewLen || 0;
+      const reviewOnly = !!t._reviewOnly;
+
+      if (kind === "new") {
+        // Advance cursor when completing a frontier new word
+        const idx = VOCAB.findIndex(w => w.lemma === item.lemma);
+        if (idx >= 0 && idx >= (t.cursor || 0)) {
+          t.cursor = idx + 1;
+        }
+        t.newDoneToday = (t.newDoneToday || 0) + 1;
+      }
+
+      t.queueIndex = (t.queueIndex || 0) + 1;
+
+      // Finished leading daily-review segment (or review-only session)
+      if (reviewLen && t.queueIndex >= reviewLen) {
+        t.reviewClearedToday = true;
+      }
+
+      // Queue finished
+      if (t.queueIndex >= t.queue.length) {
+        t.queue = [];
+        t.queueIndex = 0;
+        t._reviewLen = 0;
+        if (reviewOnly) {
+          t.reviewClearedToday = true;
+          t._reviewOnly = false;
+          t.phase = "idle";
+        } else {
+          t.phase = "day-done";
+          t.reviewClearedToday = true;
+        }
+        return;
+      }
+
+      // Still in queue — phase label
+      if (t.phase === "keep-going") return;
+      if (reviewOnly) {
+        t.phase = "review";
+        return;
+      }
+      const next = t.queue[t.queueIndex];
+      if (reviewLen && t.queueIndex < reviewLen) t.phase = "review";
+      else t.phase = next && next.kind === "review" ? "review" : "new";
+    });
+  }
+
+  function startKeepGoing() {
+    updateTrack((t) => {
+      const chunk = 10; // small keep-going batch of new words
+      const newQ = buildNewQueue(t, chunk);
+      if (!newQ.length) {
+        // no new words left — review-only keep going
+        const rq = buildReviewQueue(t);
+        t.queue = rq;
+        t.queueIndex = 0;
+        t.phase = rq.length ? "keep-going" : "day-done";
+        t.keepGoingStreak = 0;
+        return;
+      }
+      // Build queue with a review every 5th card
+      const mixed = [];
+      let streak = 0;
+      newQ.forEach((card, i) => {
+        mixed.push(card);
+        streak++;
+        if (streak % (VT.reviewEveryN || 5) === 0) {
+          const pool = weakReviewPool(t);
+          if (pool.length) {
+            const pick = pool[Math.floor(Math.random() * pool.length)];
+            mixed.push({ lemma: pick, kind: "review" });
+          }
+        }
+      });
+      t.queue = mixed;
+      t.queueIndex = 0;
+      t.phase = "keep-going";
+      t.keepGoingStreak = 0;
+    });
+  }
+
+  function startEndQuiz() {
+    updateTrack((t) => {
+      // Prefer weak + recently introduced
+      let pool = weakReviewPool(t);
+      if (pool.length < VT.endQuizSize) {
+        const recent = [];
+        for (let i = Math.max(0, (t.cursor || 0) - 40); i < (t.cursor || 0); i++) {
+          if (VOCAB[i]) recent.push(VOCAB[i].lemma);
+        }
+        pool = shuffle([...new Set([...pool, ...recent])]);
+      } else {
+        pool = shuffle(pool);
+      }
+      if (!pool.length) {
+        // fallback any
+        pool = shuffle(VOCAB.map(w => w.lemma));
+      }
+      t.queue = pool.slice(0, VT.endQuizSize).map(lemma => ({ lemma, kind: "quiz" }));
+      t.queueIndex = 0;
+      t.phase = "end-quiz";
+    });
+  }
+
+  function stopHereForDay() {
+    updateTrack((t) => {
+      // Keep cursor / progress; clear active queue; offer quiz via UI state
+      t.queue = [];
+      t.queueIndex = 0;
+      t.phase = "stopped";
+    });
+  }
+
+  function idleTrack() {
+    updateTrack((t) => {
+      t.phase = "idle";
+      t.queue = [];
+      t.queueIndex = 0;
+    });
+  }
+
+  function viewVocabStudy() {
+    const t = getTrack();
+    rollTrackDayIfNeeded(t);
+
+    if (t.phase === "idle") {
+      return shell(`
+        <div class="lesson-meta">
+          <span class="badge badge-sea">Vocab track</span>
+          <button class="btn btn-soft btn-sm" data-go="vocab">Track home</button>
+        </div>
+        <div class="vocab-day-done">
+          <h2>All set for now</h2>
+          <p class="muted">Your place is saved. Resume anytime from the track home.</p>
+          <button class="btn btn-primary" data-go="vocab">Back to track home</button>
+        </div>
+      `, { vocabBtn: false });
+    }
+
+    // day-done / stopped screens
+    if (t.phase === "day-done" || t.phase === "stopped") {
+      const prog = trackProgress();
+      const canKeep = prog.cursor < VOCAB.length || weakReviewPool(t).length > 0;
+      const stopped = t.phase === "stopped";
+      return shell(`
+        <div class="vocab-study">
+          <div class="lesson-meta">
+            <span class="badge badge-sea">Vocab track</span>
+            <button class="btn btn-soft btn-sm" data-go="vocab">Track home</button>
+          </div>
+          <div class="vocab-day-done">
+            <h2>${stopped ? "Stopped for now" : "Session complete"}</h2>
+            <p class="muted">${stopped
+              ? "Your place is saved. Come back anytime — even later today — and continue."
+              : "You’ve finished today’s review and core new set (or everything left)."}</p>
+            <div class="vocab-track-stats">
+              <span><strong>${prog.introduced}</strong> / ${prog.total} introduced</span>
+              <span><strong>${prog.mastered}</strong> mastered</span>
+            </div>
+            <div class="nav-row mt-2" id="vocab-stop-actions">
+              ${canKeep ? `<button type="button" class="btn btn-primary" id="vocab-keep-going">Keep going?</button>` : ""}
+              ${!stopped ? `<button type="button" class="btn btn-soft" id="vocab-stop-day">Stop here for the day</button>` : ""}
+              <button type="button" class="btn btn-ghost" data-go="vocab">Back to track home</button>
+            </div>
+            <div id="vocab-quiz-offer" class="vocab-quiz-offer" hidden>
+              <p><strong>Quick review quiz?</strong> Five cards from what you’ve been studying.</p>
+              <div class="nav-row">
+                <button type="button" class="btn btn-primary btn-sm" id="vocab-end-quiz-yes">Yes, quiz me</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="vocab-end-quiz-no">No thanks</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `, { vocabBtn: false });
+    }
+
+    if (t.phase === "end-quiz") {
+      return viewVocabEndQuiz();
+    }
+
+    const item = currentQueueItem();
+    if (!item) {
+      // Fallback: rebuild or go home
+      return shell(`
+        <div class="lesson-meta">
+          <button class="btn btn-soft btn-sm" data-go="vocab">Track home</button>
+        </div>
+        <p>No cards in this session. <button class="btn btn-primary btn-sm" data-go="vocab">Return</button></p>
+      `, { vocabBtn: false });
+    }
+
+    const word = wordByLemma(item.lemma);
+    if (!word) {
+      updateTrack((t) => { t.queueIndex = (t.queueIndex || 0) + 1; });
+      return shell(`
+        <div class="lesson-meta"><button class="btn btn-soft btn-sm" data-go="vocab-study">Continue</button></div>
+        <p class="muted">Skipping a missing card…</p>
+      `, { vocabBtn: false });
+    }
+
+    const pos = (t.queueIndex || 0) + 1;
+    const totalQ = t.queue.length;
+    const phaseLabel = t.phase === "review" ? "Daily review"
+      : t.phase === "keep-going" ? "Keep going"
+      : t.phase === "new" ? "New words"
+      : "Study";
+    const prog = trackProgress();
+
     return shell(`
-      <div class="lesson-meta">
-        <span class="badge badge-sea">Day ${day}</span>
-        <span class="badge">${meta ? meta.title : ""}</span>
-        <button class="btn btn-soft btn-sm" data-go="vocab">All days</button>
-      </div>
-      <p class="muted mb-2">${meta ? meta.blurb : ""} · ${words.length} words</p>
-      <div id="day-carousel" data-day="${day}" data-i="0">
-        ${renderVocabCard(words[0], { hideGloss: true })}
-        <div class="nav-row">
-          <button class="btn btn-soft" id="vprev" disabled>← Prev</button>
-          <span class="muted" id="vpos">1 / ${words.length}</span>
-          <button class="btn btn-primary" id="vnext">Next →</button>
+      <div class="vocab-study" id="vocab-study-root">
+        <div class="lesson-meta">
+          <span class="badge badge-sea">${phaseLabel}</span>
+          <span class="badge">${pos} / ${totalQ}</span>
+          <span class="muted" style="font-size:0.85rem">${prog.introduced} introduced · ${prog.mastered} mastered</span>
+          <button class="btn btn-soft btn-sm" data-go="vocab">Track home</button>
+        </div>
+        ${renderVocabCard(word, { hideGloss: true, kind: item.kind, trackMode: true })}
+        <div class="vocab-study-controls">
+          <p class="muted" style="font-size:0.85rem;margin:0 0 0.5rem">“Got it” or “Still learning” advances to the next card.</p>
+          <div class="vocab-stop-wrap">
+            <button type="button" class="btn btn-ghost btn-sm" id="vocab-stop-inline">Stop here for the day</button>
+            <div id="vocab-quiz-offer" class="vocab-quiz-offer" hidden>
+              <p><strong>Quick review quiz?</strong> Five important cards from your recent study.</p>
+              <div class="nav-row">
+                <button type="button" class="btn btn-primary btn-sm" id="vocab-end-quiz-yes">Yes, quiz me</button>
+                <button type="button" class="btn btn-ghost btn-sm" id="vocab-end-quiz-no">No thanks</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     `, { vocabBtn: false });
   }
 
-  function bindVocabDayCarousel() {
-    const root = app.querySelector("#day-carousel");
-    if (!root) return;
-    const day = +root.dataset.day;
-    const words = vocabByDay(day);
-    let i = 0;
-
-    function paint() {
-      const cardHost = root.querySelector(".vocab-card").parentNode === root
-        ? null : null;
-      // replace card
-      const old = root.querySelector(".vocab-card");
-      const wrap = document.createElement("div");
-      wrap.innerHTML = renderVocabCard(words[i], { hideGloss: true });
-      old.replaceWith(wrap.firstElementChild);
-      app.querySelector("#vpos").textContent = `${i + 1} / ${words.length}`;
-      app.querySelector("#vprev").disabled = i === 0;
-      app.querySelector("#vnext").textContent = i === words.length - 1 ? "Done" : "Next →";
-      bindVocabCardActions();
-      // re-bind master to not full-page reload ideally — bindVocabCardActions calls go() which is fine
+  function viewVocabEndQuiz() {
+    const t = getTrack();
+    const items = (t.queue || []).map(q => wordByLemma(q.lemma)).filter(Boolean);
+    if (!items.length) {
+      idleTrack();
+      return shell(`
+        <div class="lesson-meta"><button class="btn btn-soft btn-sm" data-go="vocab">Track home</button></div>
+        <p>No quiz cards available.</p>
+      `, { vocabBtn: false });
     }
 
-    app.querySelector("#vprev").addEventListener("click", () => {
-      if (i > 0) { i--; paint(); }
+    const qs = items.map((w, qi) => {
+      const wrongs = VOCAB.filter(x => x.lemma !== w.lemma)
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 3)
+        .map(x => x.gloss);
+      const opts = [w.gloss, ...wrongs].sort(() => Math.random() - 0.5);
+      const answer = opts.indexOf(w.gloss);
+      return { w, opts, answer, qi };
     });
-    app.querySelector("#vnext").addEventListener("click", () => {
-      if (i < words.length - 1) { i++; paint(); }
-      else go("vocab");
+    window.__vqEnd = qs;
+
+    return shell(`
+      <div class="vocab-study">
+        <div class="lesson-meta">
+          <span class="badge badge-terra">Quick review quiz</span>
+          <button class="btn btn-soft btn-sm" data-go="vocab">Track home</button>
+        </div>
+        <div class="quiz-block" id="vocab-end-quiz-block">
+          <h3>What does this mean?</h3>
+          <p class="quiz-variant-hint">${qs.length} cards from your recent study.</p>
+          ${qs.map(q => `
+            <div class="quiz-q">
+              <div class="q-text"><span class="greek">${q.w.lemma}</span><br/><span class="muted" style="font-weight:500;font-size:0.9rem">${formatLexical(q.w)}</span></div>
+              <div class="options">
+                ${q.opts.map((o, oi) => `
+                  <button class="option-btn vq-end-opt" data-qi="${q.qi}" data-oi="${oi}" data-ans="${q.answer}">${o}</button>
+                `).join("")}
+              </div>
+              <div class="feedback" id="vq-end-fb-${q.qi}"></div>
+            </div>
+          `).join("")}
+        </div>
+        <div class="nav-row">
+          <button class="btn btn-primary" id="vocab-end-quiz-done">Done · save &amp; exit</button>
+          <button class="btn btn-ghost" data-go="vocab">Track home</button>
+        </div>
+      </div>
+    `, { vocabBtn: false });
+  }
+
+  function bindVocabStudy() {
+    const root = app.querySelector("#vocab-study-root");
+    const dayDone = app.querySelector(".vocab-day-done");
+    const endQuizBlock = app.querySelector("#vocab-end-quiz-block");
+
+    function showQuizOffer() {
+      const offer = app.querySelector("#vocab-quiz-offer");
+      if (offer) offer.hidden = false;
+    }
+
+    const stopInline = app.querySelector("#vocab-stop-inline");
+    if (stopInline) {
+      stopInline.addEventListener("click", () => {
+        showQuizOffer();
+      });
+    }
+
+    const stopDay = app.querySelector("#vocab-stop-day");
+    if (stopDay) {
+      stopDay.addEventListener("click", () => {
+        showQuizOffer();
+        stopDay.disabled = true;
+      });
+    }
+
+    const yes = app.querySelector("#vocab-end-quiz-yes");
+    if (yes) {
+      yes.addEventListener("click", () => {
+        stopHereForDay();
+        startEndQuiz();
+        go("vocab-study");
+      });
+    }
+    const no = app.querySelector("#vocab-end-quiz-no");
+    if (no) {
+      no.addEventListener("click", () => {
+        stopHereForDay();
+        idleTrack();
+        go("vocab");
+      });
+    }
+
+    const keep = app.querySelector("#vocab-keep-going");
+    if (keep) {
+      keep.addEventListener("click", () => {
+        startKeepGoing();
+        go("vocab-study");
+      });
+    }
+
+    function afterAdvance() {
+      const t = getTrack();
+      if (t.phase === "idle") go("vocab");
+      else go("vocab-study");
+    }
+
+    app.querySelectorAll("[data-track-gotit]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        advanceAfterCard(true);
+        afterAdvance();
+      });
     });
-    bindVocabCardActions();
+    app.querySelectorAll("[data-track-again]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        advanceAfterCard(false);
+        afterAdvance();
+      });
+    });
+
+    // End quiz options
+    app.querySelectorAll(".vq-end-opt").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const qi = +btn.dataset.qi;
+        const oi = +btn.dataset.oi;
+        const ans = +btn.dataset.ans;
+        const q = window.__vqEnd && window.__vqEnd[qi];
+        if (!q) return;
+        const fb = app.querySelector(`#vq-end-fb-${qi}`);
+        const siblings = app.querySelectorAll(`.vq-end-opt[data-qi="${qi}"]`);
+        siblings.forEach(s => { s.disabled = true; });
+        if (oi === ans) {
+          btn.classList.add("correct");
+          fb.className = "feedback show ok";
+          fb.textContent = `✓ ${q.w.lemma}: ${q.w.gloss}`;
+          markLemmaResult(q.w.lemma, true);
+        } else {
+          btn.classList.add("wrong");
+          siblings[ans].classList.add("correct");
+          fb.className = "feedback show no";
+          fb.textContent = `→ ${q.w.lemma}: ${q.w.gloss}`;
+          markLemmaResult(q.w.lemma, false);
+        }
+      });
+    });
+
+    const endDone = app.querySelector("#vocab-end-quiz-done");
+    if (endDone) {
+      endDone.addEventListener("click", () => {
+        idleTrack();
+        go("vocab");
+      });
+    }
+
+    if (root) bindVocabCardActions();
   }
 
   function viewVocabBrowse() {
@@ -534,7 +1160,6 @@
   }
 
   function viewVocabQuiz() {
-    // pick up to 8 unmastered (or any) for MC gloss quiz
     const pool = VOCAB.slice().sort(() => Math.random() - 0.5);
     const items = pool.slice(0, 8);
     const qs = items.map((w, qi) => {
@@ -547,7 +1172,6 @@
       return { w, opts, answer, qi };
     });
 
-    // store on window for bind
     window.__vq = qs;
 
     return shell(`
@@ -591,12 +1215,20 @@
           btn.classList.add("correct");
           fb.className = "feedback show ok";
           fb.textContent = `✓ ${q.w.lemma}: ${q.w.gloss}`;
-          state = HGStorage.update(s => { s.vocabMastered[q.w.lemma] = true; });
+          state = HGStorage.update(s => {
+            s.vocabMastered[q.w.lemma] = true;
+            ensureVocabTrack(s);
+            delete s.vocabTrack.weak[q.w.lemma];
+          });
         } else {
           btn.classList.add("wrong");
           siblings[ans].classList.add("correct");
           fb.className = "feedback show no";
           fb.textContent = `→ ${q.w.lemma}: ${q.w.gloss}`;
+          state = HGStorage.update(s => {
+            ensureVocabTrack(s);
+            s.vocabTrack.weak[q.w.lemma] = true;
+          });
         }
       });
     });
@@ -1523,7 +2155,7 @@
         <h2>Well done</h2>
         <div class="lesson-body">
           <p>You have finished the programmed path: dialect grammar, core vocab, guided sentences and passages, and a continuous Odyssey narrative.</p>
-          <p>Keep cycling quiz sets, thematic scenes, and Day 1–5 vocab. When ready, continue Odyssey 9 from the cave — and use a facing text (e.g. Steadman or the Homer Reader) for every word parse.</p>
+          <p>Keep cycling quiz sets, thematic scenes, and the vocab mastery track. When ready, continue Odyssey 9 from the cave — and use a facing text (e.g. Steadman or the Homer Reader) for every word parse.</p>
           <div class="example-box">
             <div class="greek-line">ἦε φιλόξεινοι, καί σφιν νόος ἐστὶ θεουδής;</div>
             <div class="eng-line">…or guest-loving, and their mind is god-fearing?</div>
@@ -1548,7 +2180,8 @@
     else if (route === "grammar-hub") html = viewGrammarHub();
     else if (route.startsWith("grammar/")) html = viewGrammarCard(route.slice(8));
     else if (route === "vocab") html = viewVocabHome();
-    else if (route.startsWith("vocab-day/")) html = viewVocabDay(route.split("/")[1]);
+    else if (route === "vocab-study") html = viewVocabStudy();
+    else if (route.startsWith("vocab-day/")) html = viewVocabHome(); // legacy day links → track home
     else if (route === "vocab-browse") html = viewVocabBrowse();
     else if (route === "vocab-quiz") html = viewVocabQuiz();
     else if (route === "thematic") html = viewThematicHome();
@@ -1576,7 +2209,8 @@
     bindGlobal();
     bindGrammarQuiz();
     bindVocabCardActions();
-    bindVocabDayCarousel();
+    bindVocabHome();
+    bindVocabStudy();
     bindVocabQuiz();
     bindThematic();
     bindMapQuiz();

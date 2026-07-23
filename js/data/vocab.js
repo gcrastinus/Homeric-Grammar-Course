@@ -1,6 +1,7 @@
 /* Core Homeric vocabulary for the Odyssey
    Priority: high Odyssey frequency, low NT overlap, no proper names
-   ~200 lemmas, 5-day workup (40/day)
+   ~198 lemmas. Study order is VOCAB array order (two-week directed track
+   in the app: ~20 new/day with spaced review). day 1–5 is thematic cluster only.
 */
 const VOCAB_DAYS = [
   {
@@ -29,6 +30,14 @@ const VOCAB_DAYS = [
     blurb: "Divine epithets in use, cunning, tools, time, and filler high-frequency glue."
   }
 ];
+
+/** Directed mastery track pacing (used by app.js) */
+const VOCAB_TRACK = {
+  newPerDay: 20,
+  reviewEveryN: 5,   // in keep-going: every Nth card is a review
+  endQuizSize: 5,
+  targetDays: 14     // framing / ideal pace, not a hard lockout
+};
 
 const VOCAB = [
   // ——— DAY 1: Speech, mind, return (40) ———

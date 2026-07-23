@@ -18,6 +18,20 @@ const HGStorage = (() => {
       grammarQuizVariant: {}, // sectionId -> 0|1|2
       vocabMastered: {},     // lemma -> true
       vocabSeen: {},         // lemma -> true
+      // Directed two-week vocab mastery track (thematic section is separate)
+      vocabTrack: {
+        started: false,
+        cursor: 0,              // next new word index in VOCAB
+        weak: {},               // lemma -> true (needs review)
+        lastDate: null,         // YYYY-MM-DD of last track activity
+        newDoneToday: 0,        // new cards completed on lastDate
+        reviewClearedToday: false,
+        // mid-session resume
+        phase: "idle",          // idle | review | new | keep-going | day-done | end-quiz
+        queue: [],              // current session card descriptors { lemma, kind: "new"|"review" }
+        queueIndex: 0,
+        keepGoingStreak: 0      // new cards since last injected review in keep-going
+      },
       mapDone: {},           // step id -> true
       readingDone: {},       // id -> true
       darkMode: false,

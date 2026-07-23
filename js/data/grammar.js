@@ -937,7 +937,7 @@ const GRAMMAR_SECTIONS = [
           q: "Best use of the vocab tool?",
           options: [
             "Only on day 5",
-            "Five-day mastery path + thematic scenes in parallel",
+            "Two-week mastery track + thematic scenes in parallel",
             "Replace all grammar study",
             "Memorize names of every Phaeacian"
           ],
