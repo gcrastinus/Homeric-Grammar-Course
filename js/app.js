@@ -203,6 +203,12 @@
 
         <h3 class="home-section-label home-section-label--odyssey">Homer’s Odyssey</h3>
         <div class="module-grid">
+          <button class="module-card" data-go="odyssey-story">
+            <div class="mod-greek">μῦθος</div>
+            <h3>The Story of the Odyssey</h3>
+            <p>Ancient book-by-book Greek summaries of the whole poem — plot orientation in short prose, with help for non-NT words.</p>
+            <span class="progress-pill">${Object.keys(state.storyDone || {}).length} / 24 books visited</span>
+          </button>
           <a class="module-card module-card--link" href="https://johnhboyer-sys.github.io/homer-reader/odyssey/book/1/" target="_blank" rel="noopener noreferrer">
             <div class="mod-greek">Ὀδύσσεια</div>
             <h3>Read Homer’s <em>Odyssey</em></h3>
@@ -2149,6 +2155,167 @@
     `);
   }
 
+  // ——— Odyssey story (ancient ὑποθέσεις) ———
+  function viewOdysseyStoryHub() {
+    if (typeof ODYSSEY_STORY === "undefined" || !ODYSSEY_STORY.books) {
+      return shell(`
+        <div class="lesson-meta">
+          <button class="btn btn-soft btn-sm" data-go="welcome">Home</button>
+        </div>
+        <p>Story summaries unavailable.</p>
+      `);
+    }
+    const done = state.storyDone || {};
+    const cards = ODYSSEY_STORY.books.map(b => {
+      const visited = !!done[b.book];
+      return `
+        <button class="story-book-card ${visited ? "visited" : ""}" data-go="odyssey-story/${b.book}">
+          <span class="story-book-num">Book ${b.book}</span>
+          <span class="story-book-letter greek">${b.letter}</span>
+          <span class="story-book-title">${b.titleEn}</span>
+          <span class="story-book-title-gr greek muted">${b.titleGr}</span>
+        </button>
+      `;
+    }).join("");
+
+    return shell(`
+      <div class="story-hub">
+        <div class="lesson-meta">
+          <span class="badge badge-sea">Plot digests</span>
+          <button class="btn btn-soft btn-sm" data-go="welcome">Home</button>
+        </div>
+        <h2 class="story-hub-heading">The Story of the Odyssey</h2>
+        <p class="muted story-hub-lead">Ancient book-by-book summaries (<span class="greek">ὑποθέσεις</span>) of the whole poem — short Greek prose digests of each book’s action. They are <em>not</em> Homeric verse and not the core vocab track; use them to orient yourself in the story before or alongside real Odyssey reading.</p>
+        <p class="muted" style="font-size:0.9rem">${ODYSSEY_STORY.sourceNote || ""}</p>
+        <div class="story-book-grid">${cards}</div>
+      </div>
+    `, { vocabBtn: false });
+  }
+
+  function renderStoryGreek(book) {
+    if (book.segments && book.segments.length) {
+      return book.segments.map(seg => {
+        if (seg.t === "t") {
+          return escapeHtml(seg.v);
+        }
+        if (seg.gloss) {
+          const tip = `${seg.lemma || seg.v}: ${seg.gloss}`.replace(/"/g, "&quot;");
+          return `<button type="button" class="story-word" data-tip="${tip}" title="${tip}">${escapeHtml(seg.v)}</button>`;
+        }
+        return escapeHtml(seg.v);
+      }).join("");
+    }
+    return escapeHtml(book.greek || "");
+  }
+
+  function escapeHtml(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function viewOdysseyStoryBook(num) {
+    const book = typeof odysseyStoryBook === "function"
+      ? odysseyStoryBook(num)
+      : (ODYSSEY_STORY && ODYSSEY_STORY.books.find(b => b.book === +num));
+    if (!book) {
+      return shell(`
+        <div class="lesson-meta">
+          <button class="btn btn-soft btn-sm" data-go="odyssey-story">All books</button>
+        </div>
+        <p>Book not found.</p>
+      `, { vocabBtn: false });
+    }
+
+    // mark visited
+    state = HGStorage.update(s => {
+      if (!s.storyDone) s.storyDone = {};
+      s.storyDone[book.book] = true;
+    });
+
+    const prev = book.book > 1 ? book.book - 1 : null;
+    const next = book.book < 24 ? book.book + 1 : null;
+    const glossRows = (book.glosses || []).map(g => `
+      <div class="story-gloss-row">
+        <span class="greek story-gloss-lemma">${escapeHtml(g.lemma)}</span>
+        <span class="story-gloss-sense">${escapeHtml(g.gloss)}</span>
+      </div>
+    `).join("");
+
+    return shell(`
+      <div class="story-book">
+        <div class="lesson-meta">
+          <span class="badge badge-sea">Book ${book.book}</span>
+          <span class="badge greek">${book.letter}</span>
+          <button class="btn btn-soft btn-sm" data-go="odyssey-story">All books</button>
+        </div>
+        <h2 class="story-book-heading">${escapeHtml(book.titleEn)}</h2>
+        <p class="story-book-subtitle greek">${escapeHtml(book.titleGr)}</p>
+
+        <div class="story-greek-panel">
+          <p class="story-greek greek" id="story-greek-text">${renderStoryGreek(book)}</p>
+          <p class="muted story-tap-hint">Underlined words are less likely from NT Greek — tap for a gloss. Full list below.</p>
+        </div>
+
+        <div class="story-gloss-panel">
+          <h3 class="story-panel-label">Help for this summary</h3>
+          <p class="muted" style="font-size:0.88rem;margin:0 0 0.75rem">Names, Odyssey-specific words, and other items not assumed from NT Greek. Common function words are left unglossed.</p>
+          <div class="story-gloss-list">${glossRows || "<p class=\"muted\">No extra glosses for this book.</p>"}</div>
+        </div>
+
+        <div class="story-english-panel">
+          <button type="button" class="btn btn-soft btn-sm" id="story-toggle-en">Show English gist</button>
+          <div id="story-english" class="story-english" hidden>
+            <p>${escapeHtml(book.english)}</p>
+          </div>
+        </div>
+
+        <div class="nav-row mt-2">
+          <button class="btn btn-soft" ${prev ? `data-go="odyssey-story/${prev}"` : "disabled"}>← Book ${prev || ""}</button>
+          <button class="btn btn-primary" ${next ? `data-go="odyssey-story/${next}"` : `data-go="odyssey-story"`}>
+            ${next ? `Book ${next} →` : "All books"}
+          </button>
+        </div>
+      </div>
+    `, { vocabBtn: false });
+  }
+
+  function bindOdysseyStory() {
+    const enBtn = app.querySelector("#story-toggle-en");
+    const enBox = app.querySelector("#story-english");
+    if (enBtn && enBox) {
+      enBtn.addEventListener("click", () => {
+        const open = enBox.hasAttribute("hidden");
+        if (open) {
+          enBox.removeAttribute("hidden");
+          enBtn.textContent = "Hide English gist";
+        } else {
+          enBox.setAttribute("hidden", "");
+          enBtn.textContent = "Show English gist";
+        }
+      });
+    }
+    const tip = app.querySelector("#story-live-tip");
+    app.querySelectorAll(".story-word").forEach(btn => {
+      btn.addEventListener("click", () => {
+        app.querySelectorAll(".story-word.is-active").forEach(w => w.classList.remove("is-active"));
+        btn.classList.add("is-active");
+        let host = app.querySelector("#story-live-tip");
+        if (!host) {
+          host = document.createElement("div");
+          host.id = "story-live-tip";
+          host.className = "story-live-tip";
+          const panel = app.querySelector(".story-greek-panel");
+          if (panel) panel.appendChild(host);
+        }
+        host.textContent = btn.getAttribute("data-tip") || "";
+        host.hidden = false;
+      });
+    });
+  }
+
   function viewReadingLongDone() {
     return shell(`
       <div class="lesson-card">
@@ -2202,6 +2369,8 @@
     else if (route === "reading-long" || route === "reading-long/0") html = viewReadingLong(0);
     else if (route === "reading-long-done") html = viewReadingLongDone();
     else if (route.startsWith("reading-long/")) html = viewReadingLong(parseInt(route.split("/")[1], 10) || 0);
+    else if (route === "odyssey-story") html = viewOdysseyStoryHub();
+    else if (route.startsWith("odyssey-story/")) html = viewOdysseyStoryBook(parseInt(route.split("/")[1], 10) || 1);
     else if (route === "nt-refresh") html = viewNtRefresh();
     else html = viewWelcome();
 
@@ -2217,6 +2386,7 @@
     bindReadingSentence();
     bindReadingPassage();
     bindReadingLong();
+    bindOdysseyStory();
   }
 
   function bindGlobal() {

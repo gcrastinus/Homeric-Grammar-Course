@@ -34,6 +34,7 @@ const HGStorage = (() => {
       },
       mapDone: {},           // step id -> true
       readingDone: {},       // id -> true
+      storyDone: {},         // book number -> true (Odyssey ὑποθέσεις)
       darkMode: false,
       vaseDrawings: {},      // themeId -> dataURL (png of freehand only)
       vaseHotspots: {},      // themeId -> { [num]: { x, y, lemma, wordId } } x/y in % of board
