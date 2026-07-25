@@ -1,7 +1,8 @@
 /* Odyssey book summaries (ὑποθέσεις) from the ancient scholia tradition,
    as printed in J. U. Faesi’s editions (public domain).
    Digital text via Kevilex / Google Books–Internet Archive Faesi.
-   These are plot digests in later Greek prose — not Homeric verse. */
+   These are plot digests in later Greek prose — not Homeric verse.
+   english = literal English rendering of the Greek summary text. */
 
 const ODYSSEY_STORY = {
   sourceNote: "Ancient book-by-book summaries (ὑποθέσεις) of the Odyssey, as in Faesi’s editions (public domain). Short Greek prose digests of each book’s action — not Homeric verse.",
@@ -12,7 +13,7 @@ const ODYSSEY_STORY = {
       titleGr: "θεῶν ἀγορά. Ἀθηνᾶς παραίνεσις πρὸς Τηλέμαχον",
       titleEn: "The gods assemble; Athena advises Telemachus",
       greek: "θεῶν ἀγορὰ γίνεται περὶ τοῦ τὸν Ὀδυσσέα εἰς Ἰθάκην πεμφθῆναι ἀπὸ τῆς Καλυψοῦς νήσου· μεθ' ἣν ἡ Ἀθηνᾶ εἰς Ἰθάκην παραγίνεται πρὸς Τηλέμαχον ὁμοιωθεῖσα Μέντῃ βασιλεῖ Ταφίων. γενομένης δ' ὁμιλίας παραινέσασα ἡ Ἀθηνᾶ Τηλεμάχῳ παραγενέσθαι διὰ τὴν τοῦ πατρὸς ζήτησιν εἰς Πύλον μὲν πρὸς Νέστορα εἰς Σπάρτην δὲ πρὸς Μενέλαον, ἀπαίρει ἔμφασιν δοῦσα ὡς θεὸς εἴη. καὶ τῶν μνηστήρων γίνεται εὐωχία.",
-      english: "The gods debate Odysseus’s return. Athena visits Telemachus in disguise, urges him to seek news of his father at Pylos and Sparta, and the suitors feast.",
+      english: "An assembly of the gods takes place concerning Odysseus’s being sent to Ithaca from Calypso’s island; after which Athena arrives in Ithaca to Telemachus, having made herself like Mentes, king of the Taphians. And when a conversation has taken place, Athena, having advised Telemachus to go for the search of his father to Pylos on the one hand to Nestor and to Sparta on the other to Menelaus, departs, having given the appearance that she is a goddess. And a feast of the suitors takes place.",
       glosses: [
         { lemma: "ἀγορά", gloss: "assembly, gathering" },
         { lemma: "Ἀθήνη", gloss: "Athena" },
@@ -168,7 +169,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ἰθακησίων ἀγορά. Τηλεμάχου ἀποδημία",
       titleEn: "Ithacan assembly; Telemachus sails",
       greek: "συναγαγὼν ἐκκλησίαν Τηλέμαχος παραγγέλλει τοῖς μνηστῆρσιν ἐξιέναι τῆς οἰκίας τοῦ Ὀδυσσέως. λαβὼν δὲ παρὰ μὲν Εὐρυκλείας τὰ πρὸς τὴν ἀποδημίαν ἐπιτήδεια παρὰ δὲ Ἀθηνᾶς ἑταίρους τε καὶ ναῦν, εἰς πλοῦν ἀνάγεται ἡλίου δύναντος.",
-      english: "Telemachus calls an assembly, tells the suitors to leave, gathers provisions and a crew, and sails at sunset.",
+      english: "Having gathered an assembly, Telemachus orders the suitors to go out of the house of Odysseus. And having taken from Eurycleia on the one hand the things suitable for the journey abroad, and from Athena on the other both comrades and a ship, he puts out to sea as the sun is setting.",
       glosses: [
         { lemma: "Ἀθήνη", gloss: "Athena" },
         { lemma: "ἀνάγω", gloss: "put to sea, lead up" },
@@ -262,7 +263,7 @@ const ODYSSEY_STORY = {
       titleGr: "τὰ ἐν Πύλῳ",
       titleEn: "At Pylos",
       greek: "Τηλέμαχον ἐλθόντα σὺν Ἀθηνᾷ ξενίζει Νέστωρ, καὶ διηγεῖται αὐτῷ τὰ συμβεβηκότα τοῖς Ἕλλησι κατὰ τὸν ἀπόπλουν ἐκ Τροίας. πυθόμενος δὲ τὰ περὶ τοὺς μνηστῆρας καὶ γνωρίσας τὴν Ἀθηνᾶν ἀπιοῦσαν θυσίαν αὐτῇ ἐπιτελεῖ· λαβὼν δὲ ὁ Τηλέμαχος ἅρμα σὺν Πεισιστράτῳ Νέστορος υἱεῖ εἰς Σπάρτην ἀπαίρει. νυκτὸς δὲ ἐπιγενομένης ξενίζονται παρὰ Διοκλεῖ ἐν Φηραῖς.",
-      english: "Nestor hosts Telemachus, tells of the Greeks’ returns from Troy, and sends him on by chariot toward Sparta.",
+      english: "Nestor hosts Telemachus, who has come with Athena, and narrates to him the things that happened to the Greeks during the sailing away from Troy. And having learned the things concerning the suitors and having recognized Athena as she was departing, he performs a sacrifice to her; and Telemachus, having taken a chariot with Peisistratus son of Nestor, sets out for Sparta. And when night has come on, they are hosted by Diocles in Pherae.",
       glosses: [
         { lemma: "Ἀθήνη", gloss: "Athena" },
         { lemma: "ἀπαίρω", gloss: "set sail, depart" },
@@ -398,7 +399,7 @@ const ODYSSEY_STORY = {
       titleGr: "τὰ ἐν Λακεδαίμονι",
       titleEn: "At Sparta",
       greek: "παρὰ Μενελάῳ ξενισθεὶς σὺν Πεισιστράτῳ Τηλέμαχος ἀπαγγέλλει τὰ κατὰ τὴν Ἰθάκην ὑπὸ τῶν μνηστήρων πραττόμενα. ἔπειτα ἐξηγεῖται αὐτῷ ὁ Μενέλαος περὶ τοῦ νόστου τῶν Ἑλλήνων καὶ τῆς Πρωτέως μαντείας, δι' ἧς ἔγνω τὸν Ἀγαμέμνονος θάνατον, καὶ ὡς Ὀδυσσεὺς παρὰ Καλυψοῖ εἴη. βουλὴ δὲ γίνεται τῶν μνηστήρων περὶ τοῦ τὸν Τηλέμαχον ἀνελεῖν. παραμυθεῖται δὲ Ἀθηνᾶ δι' ὀνείρου τὴν Πηνελόπην ἐπὶ τῇ τοῦ παιδὸς ἀποδημίᾳ δυσχεραίνουσαν, δι' εἰδώλου, ὁμοιωθεῖσα Ἰφθίμῃ τῇ τῆς Πηνελόπης ἀδελφῇ.",
-      english: "Menelaus hosts Telemachus, tells of his own nostos and Proteus’s prophecy that Odysseus is with Calypso. The suitors plot to kill Telemachus; Athena comforts Penelope in a dream.",
+      english: "Having been hosted at Menelaus’s with Peisistratus, Telemachus reports the things being done throughout Ithaca by the suitors. Then Menelaus explains to him concerning the homecoming of the Greeks and the prophecy of Proteus, through which he learned of Agamemnon’s death, and that Odysseus is with Calypso. And a plan of the suitors takes place concerning killing Telemachus. And Athena, through a dream, consoles Penelope, who is distressed at the journey abroad of her child, by means of a phantom, having made herself like Iphthime, the sister of Penelope.",
       glosses: [
         { lemma: "Ἀγαμέμνων", gloss: "Agamemnon" },
         { lemma: "Ἀθήνη", gloss: "Athena" },
@@ -579,7 +580,7 @@ const ODYSSEY_STORY = {
       titleGr: "Καλυψοῦς ἄντρον. Ὀδυσσέως σχεδία",
       titleEn: "Calypso’s cave; Odysseus’s raft",
       greek: "ἐκκλησίαν τῶν θεῶν δευτέραν ποιησάμενος ὁ Ζεὺς Ἑρμῆν πέμπει πρὸς Καλυψὼ κελεύων ἀποπέμπειν τὸν Ὀδυσσέα. ἡ δὲ τὸ κελευσθὲν ποιεῖ. τῇ δὲ ὀκτωκαιδεκάτῃ ἡμέρᾳ ἰδὼν αὐτὸν ὁ Ποσειδῶν καὶ χαλεπήνας λύει τὴν σχεδίαν. Ἰνὼ δὲ αὐτῷ δίδωσι κρήδεμνον, ἐντειλαμένη ἐπιβάντι τῆς γῆς ἀπορρῖψαι αὐτό. καὶ πολλὰ παθὼν εἰς τὴν τῶν Φαιάκων χώραν ἔρχεται διασωθείς.",
-      english: "Zeus sends Hermes; Calypso lets Odysseus build a raft. Poseidon wrecks it; Ino helps him; he reaches Phaeacia.",
+      english: "Having made a second assembly of the gods, Zeus sends Hermes to Calypso, ordering her to send Odysseus away. And she does what was ordered. And on the eighteenth day Poseidon, having seen him and grown angry, destroys the raft. And Ino gives him a veil, having enjoined him, when he has stepped upon the land, to throw it off. And having suffered many things, he comes safely to the land of the Phaeacians.",
       glosses: [
         { lemma: "ἀποπέμπω", gloss: "send away, dismiss" },
         { lemma: "ἀπορρίπτω", gloss: "throw off" },
@@ -716,7 +717,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως ἄφιξις εἰς Φαίακας",
       titleEn: "Arrival among the Phaeacians",
       greek: "Ναυσικάα ἡ Ἀλκίνου θυγάτηρ ὑπὸ ὀνείρου προτραπεῖσα ἐπὶ τὸν ποταμὸν κάτεισι πλυνοῦσα τὴν ἐσθῆτα. μετὰ δὲ τὸ πλῦναι παιδιά τις ὁποία εἰκὸς διὰ σφαίρας ταῖς κόραις γίνεται. Ὀδυσσεὺς δὲ θορύβου γενομένου διυπνίσθη, καὶ ἐσθῆτος τυχὼν μέχρι τοῦ τῆς Ἀθηνᾶς ἱεροῦ, ὃ πρὸ τῆς πόλεως ἦν, συνώδευε τῇ κόρῃ.",
-      english: "Nausicaa washes clothes, plays ball with her maids; Odysseus wakes, supplicates her, and is guided toward the city.",
+      english: "Nausicaa, the daughter of Alcinous, having been urged by a dream, goes down to the river to wash the clothing. And after the washing, a sort of play with a ball, such as is likely, takes place among the girls. And Odysseus, when a noise had arisen, was awakened, and having obtained clothing, journeyed with the girl as far as the sanctuary of Athena, which was before the city.",
       glosses: [
         { lemma: "Ἀθήνη", gloss: "Athena" },
         { lemma: "Ἀλκίνοος", gloss: "Alcinous" },
@@ -841,7 +842,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως εἴσοδος πρὸς Ἀλκίνουν",
       titleEn: "Odysseus enters Alcinous’s house",
       greek: "Ἀθηνᾶ εἰς τὴν πόλιν παραγενομένῳ Ὀδυσσεῖ ὑπαντᾷ καὶ ἀξιώσαντι δείκνυσι τὸν Ἀλκίνου οἶκον, εἰς ὃν εἰσελθὼν Ὀδυσσεὺς προσπίπτει τοῖς τῆς Ἀρήτης γόνασι, καὶ δεῖται αὐτῆς πέμψαι αὐτὸν εἰς τὴν πατρίδα. ἀναστήσας δὲ αὐτὸν ὁ Ἀλκίνους παρακαθίζει αὐτῷ καὶ δεῖπνον παρέχει. ἡ δὲ Ἀρήτη θεασαμένη τὴν ἐσθῆτα πυνθάνεται πόθεν ἔσχεν. ὁ δὲ διηγεῖται αὐτοῖς τὸν ἀπὸ Καλυψοῦς πλοῦν καὶ τὸ γενόμενον ναυάγιον καὶ τὴν πρὸς αὐτοὺς ἄφιξιν καὶ ὅτι δεηθεὶς Ναυσικάας ἔλαβε τὴν ἐσθῆτα.",
-      english: "Athena guides Odysseus to Alcinous’s house; he clasps Arete’s knees and asks convoy home; they feast and he tells of his shipwreck.",
+      english: "Athena meets Odysseus as he has arrived into the city and, when he has asked, shows him the house of Alcinous, into which Odysseus, having entered, falls before the knees of Arete, and begs her to send him to his fatherland. And Alcinous, having raised him up, seats him beside himself and provides a meal. And Arete, having seen the clothing, inquires from where he got it. And he narrates to them the voyage from Calypso and the shipwreck that took place and the arrival to them and that, having begged Nausicaa, he received the clothing.",
       glosses: [
         { lemma: "Ἀθήνη", gloss: "Athena" },
         { lemma: "Ἀλκίνοος", gloss: "Alcinous" },
@@ -1020,7 +1021,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως σύστασις πρὸς Φαίακας",
       titleEn: "Odysseus among the Phaeacians",
       greek: "ἐκκλησία γίνεται τῶν Φαιάκων περὶ τοῦ ξένου, καὶ ναῦς καθέλκεται πρὸς ἐκπομπὴν τοῦ Ὀδυσσέως, καὶ ἑστιῶνται παρὰ τῷ Ἀλκίνῳ τῶν Φαιάκων οἱ ἄριστοι. καὶ μετὰ ταῦτα δίσκῳ ἀγωνίζονται Φαίακες καὶ Ὀδυσσεύς. καὶ ὁ Δημόδοκος ᾄδει πρῶτον μὲν τὰ περὶ τὴν μοιχείαν Ἄρεως καὶ Ἀφροδίτης, ἔπειτα δὲ τὰ περὶ τὴν εἰσαγωγὴν τοῦ δουρείου ἵππου. καὶ τοῦ Ὀδυσσέως κλαίοντος ὁ Ἀλκίνους πυνθάνεται διὰ τί κλαίει καὶ τίς καὶ πόθεν εἴη.",
-      english: "The Phaeacians assemble, launch a ship for his return, feast, hold games; Demodocus sings of Ares and Aphrodite and of the wooden horse.",
+      english: "An assembly of the Phaeacians takes place concerning the stranger, and a ship is hauled down for the sending-off of Odysseus, and the best of the Phaeacians are feasted at Alcinous’s. And after these things the Phaeacians and Odysseus contend with the discus. And Demodocus first sings the things concerning the adultery of Ares and Aphrodite, and then the things concerning the bringing-in of the wooden horse. And as Odysseus weeps, Alcinous inquires why he weeps and who he is and from where.",
       glosses: [
         { lemma: "ἀγωνίζομαι", gloss: "compete, contend" },
         { lemma: "ἀειδής", gloss: "singer? / formless" },
@@ -1188,7 +1189,7 @@ const ODYSSEY_STORY = {
       titleGr: "Κυκλώπεια",
       titleEn: "The Cyclopeia",
       greek: "ἀρχὴ τῶν Ὀδυσσέως διηγημάτων, ἐν οἷς φησὶ πεπολεμηκέναι τοῖς Κίκοσι καὶ πρὸς τοὺς Λωτοφάγους παραγενέσθαι, καὶ ὅτι ἐτύφλωσε τὸν Κύκλωπα Πολύφημον, καὶ ὡς ἐκεῖνος κατέφαγεν αὐτοῦ ἓξ ἑταίρους ἀπὸ δώδεκα συνελθόντων.",
-      english: "Odysseus begins his own tale: Cicones, Lotus-eaters, and blinding Polyphemus, who ate six comrades.",
+      english: "The beginning of Odysseus’s narratives, in which he says that he has fought against the Cicones and has arrived at the Lotus-eaters, and that he blinded the Cyclops Polyphemus, and how that one ate up six of his comrades out of twelve who had come together.",
       glosses: [
         { lemma: "διήγημα", gloss: "narrative, tale" },
         { lemma: "δώδεκα", gloss: "twelve" },
@@ -1275,7 +1276,7 @@ const ODYSSEY_STORY = {
       titleGr: "τὰ περὶ Αἰόλου καὶ Λαιστρυγόνων καὶ Κίρκης",
       titleEn: "Aeolus, Laestrygonians, and Circe",
       greek: "τὰ περὶ τὸν Αἴολον ἀπαγγέλλει τὸν τῶν ἀνέμων φύλακα, ὡς ἔδωκεν Ὀδυσσεῖ ἐν ἀσκῷ ἀνέμους· λύσαντες δὲ οἱ ἑταῖροι κοιμωμένου Ὀδυσσέως ὑπονοστοῦσι πρὸς Αἴολον. καὶ ὡς εἰς Λαιστυγονίαν ἀφίκοντο, ἔνθα ἕνδεκα ναῦς ἀπώλεσεν. καὶ ὅσα ἔπαθε παρὰ Κίρκῃ μεταμορφωσάσῃ αὐτοῦ τοὺς ἑταίρους εἰς σῦς καὶ πάλιν ἄνδρας ποιησάσῃ. καὶ ὅπως αὐτὸς ταύτην διέφυγε παρ' Ἑρμοῦ φάρμακον λαβὼν τὸ μῶλυ, καὶ παρ' αὐτῇ τὸν ἐνιαυτὸν ἔμεινεν.",
-      english: "Aeolus’s bag of winds (opened by the crew); the Laestrygonians destroy the fleet; Circe turns men to pigs; Odysseus stays a year.",
+      english: "He reports the things concerning Aeolus, the guardian of the winds, how he gave winds to Odysseus in a bag; but the comrades, having loosed them while Odysseus was sleeping, return back to Aeolus. And how they arrived at Laestrygonia, where he lost eleven ships. And all that he suffered with Circe, who transformed his comrades into pigs and made them men again. And how he himself escaped her, having received from Hermes the drug moly, and stayed with her for the year.",
       glosses: [
         { lemma: "αἰόλος", gloss: "Aeolus" },
         { lemma: "ἄνεμος", gloss: "wind" },
@@ -1439,7 +1440,7 @@ const ODYSSEY_STORY = {
       titleGr: "νέκυια",
       titleEn: "The Nekyia (underworld)",
       greek: "ἀπαγγέλλει πῶς κατὰ Κίρκης ἐντολὰς εἰς Ἅιδου κατῆλθεν, καὶ ὡς ἤκουσε Τειρεσίου τοῦ μάντεως περὶ τῆς ἑαυτοῦ καὶ τῶν ἄλλων ἑταίρων σωτηρίας, καὶ ὡς τοὺς ἥρωας καὶ τὰς ἡρωίδας εἶδεν ἐν Ἅιδου καὶ τὴν μητέρα καὶ τῶν εἰς Ἴλιον στρατευσάντων ἐνίους καὶ τῶν ἐν Ἅιδου κολαζομένων τινάς.",
-      english: "At Circe’s command he visits Hades, hears Teiresias, and sees heroes, heroines, and his mother.",
+      english: "He reports how, according to Circe’s commands, he went down into Hades, and how he heard Teiresias the seer concerning the safety of himself and of the other comrades, and how he saw the heroes and the heroines in Hades and his mother and some of those who had campaigned to Ilios and some of those being punished in Hades.",
       glosses: [
         { lemma: "ᾍδης", gloss: "Hades" },
         { lemma: "ἀπαγγέλλω", gloss: "report, announce" },
@@ -1560,7 +1561,7 @@ const ODYSSEY_STORY = {
       titleGr: "Σειρῆνες, Σκύλλα, Χάρυβδις, βόες ἡλίου",
       titleEn: "Sirens, Scylla, Charybdis, cattle of the Sun",
       greek: "διηγεῖται τὴν ἐξ Ἅιδου γενομένην αὐτῷ ἐπάνοδον πρὸς Κίρκην, καὶ ὡς τὰς Σειρῆνας παρέπλευσε καὶ τὰς πλαγκτὰς πέτρας Σκύλλαν τε καὶ Χάρυβδιν, καὶ τὴν τῆς αὐτοῦ νεὼς καὶ τῶν ἑταίρων ἀπώλειαν ἀνελόντων τινὰς τῶν ἡλίου βοῶν, καὶ ὡς μόνος ἐπὶ ξύλου πρὸς Καλυψὼ διεσώθη.",
-      english: "Return to Circe; Sirens; Planctae, Scylla and Charybdis; the crew kill Helios’s cattle and perish; Odysseus alone survives.",
+      english: "He narrates the return that took place for him from Hades to Circe, and how he sailed past the Sirens and the wandering rocks, Scylla and Charybdis, and the destruction of his own ship and of the comrades who had killed some of the cattle of the Sun, and how he alone was brought safely on a piece of wood to Calypso.",
       glosses: [
         { lemma: "ᾍδης", gloss: "Hades" },
         { lemma: "ἀναιρέω", gloss: "kill, take up/away" },
@@ -1678,7 +1679,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως ἀπόπλους παρὰ Φαιάκων καὶ ἄφιξις εἰς Ἰθάκην",
       titleEn: "Departure from Phaeacia; arrival on Ithaca",
       greek: "κοιμώμενον Ὀδυσσέα μετὰ τῶν δώρων ἐκτιθέασιν οἱ Φαίακες εἰς τὴν γῆν τῶν Ἰθακησίων· καὶ τὴν μὲν ναῦν αὐτῶν ὑποστρέφουσαν λίθον ποιεῖ Ποσειδῶν, Ἀθηνᾶ δὲ ἐπὶ τῷ αἰγιαλῷ ὄντι Ὀδυσσεῖ συμβουλεύει περὶ τῆς μνηστηροφονίας, καὶ τὰ χρήματα ἔν τινι σπηλαίῳ ἀποκρύπτει, καὶ εἰς γέροντα μεταμορφοῖ τὸν Ὀδυσσέα.",
-      english: "The Phaeacians put sleeping Odysseus ashore with gifts; Poseidon turns their ship to stone; Athena advises him and hides his goods.",
+      english: "The Phaeacians set Odysseus, who is sleeping, with the gifts upon the land of the Ithacans; and Poseidon makes their ship, as it is turning back, into a stone, and Athena advises Odysseus, who is on the shore, concerning the slaughter of the suitors, and hides the goods in a certain cave, and transforms Odysseus into an old man.",
       glosses: [
         { lemma: "Ἀθήνη", gloss: "Athena" },
         { lemma: "αἰγιαλός", gloss: "shore, beach" },
@@ -1799,7 +1800,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως πρὸς Εὔμαιον ὁμιλία",
       titleEn: "Odysseus with Eumaeus",
       greek: "ξενισμὸς Ὀδυσσέως γίνεται ἐν τῷ ἀγρῷ παρὰ Εὐμαίῳ τῷ συβώτῃ αὐτοῦ. διηγεῖται δὲ αὐτῷ Ὀδυσσεὺς πολλὰ ἃ πέπονθεν, ἀγγέλλων καὶ τὴν Ὀδυσσέως ἐπάνοδον.",
-      english: "Eumaeus hosts the disguised Odysseus in the countryside; Odysseus tells him tales and hints at his return.",
+      english: "A hosting of Odysseus takes place in the country with Eumaeus his swineherd. And Odysseus narrates to him many things which he has suffered, announcing also the return of Odysseus.",
       glosses: [
         { lemma: "ἀγγέλλω", gloss: "announce" },
         { lemma: "ἀγρός", gloss: "field, countryside" },
@@ -1866,7 +1867,7 @@ const ODYSSEY_STORY = {
       titleGr: "Τηλεμάχου πρὸς Εὔμαιον ἄφιξις",
       titleEn: "Telemachus reaches Eumaeus",
       greek: "Τηλέμαχον Ἀθηνᾶ ὄναρ ἐπιστᾶσα εἰς Ἰθάκην ἐπανελθεῖν προτρέπεται· ὃς δῶρα παρὰ Μενελάου λαβὼν πέμπεται. καὶ ἐμβαίνειν μέλλων εἰς τὴν ναῦν Θεοκλύμενόν τινα Ἀργεῖον μάντιν ἀναλαμβάνει ἐπὶ φόνῳ φεύγοντα. καὶ Εὔμαιος Ὀδυσσεῖ διηγεῖται ὡς Φοίνικες αὐτὸν ληισάμενοι ἐκ Συρίας νήσου ἀπέδοντο Λαέρτῃ. καὶ ἡ Τηλεμάχου ναῦς κατάγεται εἰς Ἰθάκην, καὶ ταύτην εἰς ἄστυ ἀποπέμψας αὐτὸς πρὸς Εὔμαιον ἔρχεται.",
-      english: "Athena sends Telemachus home; he takes gifts, boards Theoclymenus the seer, and reaches Eumaeus’s hut.",
+      english: "Athena, having stood over Telemachus in a dream, urges him to return to Ithaca; and he, having taken gifts from Menelaus, is sent on his way. And as he is about to embark into the ship he takes on board a certain Theoclymenus, an Argive seer fleeing on account of a murder. And Eumaeus narrates to Odysseus how Phoenicians, having plundered him from the island of Syria, sold him to Laertes. And the ship of Telemachus is brought in to Ithaca, and having sent it off to the town he himself goes to Eumaeus.",
       glosses: [
         { lemma: "Ἀθήνη", gloss: "Athena" },
         { lemma: "ἀναλαμβάνω", gloss: "take up, take on board" },
@@ -2019,7 +2020,7 @@ const ODYSSEY_STORY = {
       titleGr: "ἀναγνωρισμὸς Ὀδυσσέως ὑπὸ Τηλεμάχου",
       titleEn: "Odysseus recognized by Telemachus",
       greek: "Τηλέμαχος πρὸς Εὔμαιον ἀφικόμενος τὸν μὲν ἀποπέμπει ἀγγέλλοντα τῇ μητρὶ Πηνελόπῃ, αὐτὸς δὲ γνωρίσας τὸν πατέρα Ἀθηνᾶς προαιρέσει σὺν ἐκείνῳ τὴν κατὰ τῶν μνηστήρων ἐπιβουλὴν σκέπτεται. καὶ νῆες κατάγονται εἰς Ἰθάκην ἥ τε τοῦ Τηλεμάχου καὶ τῶν ἐπιβουλευσάντων. καὶ τοὺς μνηστῆρας πάλιν ἐπιχειρεῖν τῷ Τηλεμάχῳ διανοουμένους ἐκώλυσεν Ἀμφίνομος. καὶ Εὔμαιος ἀπαγγείλας τῇ Πηνελόπῃ τὰ περὶ Τηλεμάχου εἰς τὸν ἀγρὸν ἐπανέρχεται.",
-      english: "Telemachus sends Eumaeus to Penelope; Athena reveals Odysseus to his son; they plan against the suitors.",
+      english: "Telemachus, having arrived at Eumaeus’s, sends him off to report to his mother Penelope, and he himself, having recognized his father by Athena’s design, considers with him the plot against the suitors. And ships are brought in to Ithaca, both that of Telemachus and that of those who had plotted. And Amphinomus prevented the suitors who were intending again to attempt something against Telemachus. And Eumaeus, having reported to Penelope the things concerning Telemachus, returns to the country.",
       glosses: [
         { lemma: "ἀγγέλλω", gloss: "announce" },
         { lemma: "ἀγρός", gloss: "field, countryside" },
@@ -2174,7 +2175,7 @@ const ODYSSEY_STORY = {
       titleGr: "Τηλεμάχου ἐπάνοδος εἰς Ἰθάκην",
       titleEn: "Telemachus returns to town",
       greek: "εἰς τὴν πόλιν ἐλθὼν Τηλέμαχος διηγεῖται τῇ μητρὶ Πηνελόπῃ τῆς ἀποδημίας τὰ κεφάλαια. ὕστερον δὲ Ὀδυσσεὺς ἀχθεὶς ὑπὸ τοῦ Εὐμαίου εἰς Ἰθάκην ἀπὸ τῶν ἀγρῶν εἰς τὸ συμπόσιον τῶν μνηστήρων εἰσέρχεται. ὁ δὲ κύων ἀναγνωρίζει τὸν δεσπότην. καὶ Εὔμαιος μὲν εἰς τοὺς ἀγροὺς ὑποστρέφει, Ὀδυσσεὺς δὲ ἐν αὐτοῖς μένει.",
-      english: "Telemachus reports to Penelope; Eumaeus brings Odysseus to town; the dog Argos recognizes his master.",
+      english: "Having come into the city, Telemachus narrates to his mother Penelope the main points of the journey abroad. And later Odysseus, having been led by Eumaeus into Ithaca from the fields, enters into the banquet of the suitors. And the dog recognizes his master. And Eumaeus on the one hand turns back to the fields, and Odysseus on the other remains among them.",
       glosses: [
         { lemma: "ἀγρός", gloss: "field, countryside" },
         { lemma: "ἀναγνωρίζω", gloss: "recognize" },
@@ -2299,7 +2300,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως καὶ Ἴρου πυγμή",
       titleEn: "Odysseus and Irus; the boxing match",
       greek: "γενομένης μάχης Ὀδυσσέως πρὸς ἕτερον πτωχὸν ἐλθόντα πρὸς τοὺς μνηστῆρας, Πηνελόπη λαμβάνει δῶρα παρὰ τῶν μνηστήρων. γίνεται δὲ καί τις κοινολογία ἐν τοῖς ἑξῆς Ὀδυσσέως πρὸς Εὐρύμαχον.",
-      english: "Odysseus fights the beggar Irus; Penelope takes gifts from the suitors; talk with Eurymachus.",
+      english: "A fight of Odysseus having taken place against another beggar who had come to the suitors, Penelope receives gifts from the suitors. And there also takes place in what follows a certain conversation of Odysseus with Eurymachus.",
       glosses: [
         { lemma: "ἑξῆς", gloss: "next, in what follows" },
         { lemma: "Εὐρύμαχος", gloss: "Eurymachus" },
@@ -2371,7 +2372,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως καὶ Πηνελόπης ὁμιλία. τὰ νίπτρα",
       titleEn: "Odysseus and Penelope; the foot-washing",
       greek: "σὺν Τηλεμάχῳ ἔκθεσιν ποιεῖται τῶν ὅπλων Ὀδυσσεύς, καὶ πρὸς Πηνελόπην ἐκ Κρήτης εἶναι ὑποκρίνεται. γίνεται δὲ αὐτοῦ δι' οὐλῆς ἀναγνωρισμὸς πρὸς Εὐρύκλειαν τοὺς πόδας αὐτοῦ νίπτουσαν. καὶ κατὰ παρέκβασιν ὁ ποιητὴς διηγεῖται ὡς ἐν Παρνασσῷ ὑπὸ συὸς ἐπλήγη κυνηγῶν.",
-      english: "Odysseus and Telemachus store the arms; Odysseus pretends to be from Crete; Eurycleia knows him by his scar while washing his feet.",
+      english: "Together with Telemachus, Odysseus makes a setting-out of the arms, and toward Penelope he pretends to be from Crete. And a recognition of him by means of a scar takes place with Eurycleia as she is washing his feet. And by way of digression the poet narrates how on Parnassus he was struck by a boar while hunting.",
       glosses: [
         { lemma: "ἀναγνωρισμός", gloss: "recognition (anagnorisis)" },
         { lemma: "διηγέομαι", gloss: "narrate, tell at length" },
@@ -2479,7 +2480,7 @@ const ODYSSEY_STORY = {
       titleGr: "τὰ πρὸ τῆς μνηστηροφονίας",
       titleEn: "Before the slaughter of the suitors",
       greek: "βουληθεὶς ἀνελεῖν ὁ Ὀδυσσεὺς τὰς μιγνυμένας τοῖς μνηστῆρσι θεραπαίνας, ὕστερον δὲ μεταγνούς, διὰ τῶν ἑξῆς πρὸς Εὔμαιον καὶ Φιλοίτιον διαλέγεται· ἐν ᾧ καὶ τῶν μνηστήρων γίνεται ὁμιλία.",
-      english: "Odysseus nearly kills the disloyal maids, then restrains himself; he speaks with Eumaeus and Philoetius; the suitors talk.",
+      english: "Odysseus, having wished to kill the maidservants who were mingling with the suitors, but later having changed his mind, converses in what follows with Eumaeus and Philoetius; in the course of which there also takes place a conversation of the suitors.",
       glosses: [
         { lemma: "ἁγνός", gloss: "pure, chaste" },
         { lemma: "ἀναιρέω", gloss: "kill, take up/away" },
@@ -2556,7 +2557,7 @@ const ODYSSEY_STORY = {
       titleGr: "τόξου θέσις",
       titleEn: "The contest of the bow",
       greek: "Πηνελόπη τῷ τείνοντι τὸ τόξον ὁμολογεῖ τὸν αὐτῆς γάμον. Ὀδυσσεὺς δὲ Εὐμαίῳ καὶ Φιλοιτίῳ ἐντειλάμενος περὶ τῆς τῶν θυρῶν ἀσφαλείας αὐτὸς ἀφίησι τὸ βέλος διὰ τῶν πελέκεων, ἄλλου τεῖναι τὸ τόξον μὴ δυνηθέντος.",
-      english: "Penelope sets the bow contest as the marriage test; Odysseus, with the loyal herdsmen securing doors, strings the bow and shoots through the axes.",
+      english: "Penelope promises her marriage to the one who stretches the bow. And Odysseus, having given orders to Eumaeus and Philoetius concerning the security of the doors, himself lets fly the arrow through the axes, when no other had been able to stretch the bow.",
       glosses: [
         { lemma: "ἀσφάλεια", gloss: "security, safety" },
         { lemma: "βέλος", gloss: "arrow, missile" },
@@ -2646,7 +2647,7 @@ const ODYSSEY_STORY = {
       titleGr: "μνηστηροφονία",
       titleEn: "Slaughter of the suitors",
       greek: "τὰ περὶ τὴν μνηστηροφονίαν ἐργασάμενος Ὀδυσσεὺς παρούσης Ἀθηνᾶς ἐν τοῖς ἑξῆς τὰς θεραπαίνας διὰ Τηλεμάχου καὶ τῶν οἰκείων κολάζει ἅμα Μελανθίῳ.",
-      english: "With Athena’s help Odysseus kills the suitors and, through Telemachus, punishes the maids and Melanthius.",
+      english: "Having accomplished the things concerning the slaughter of the suitors with Athena present, Odysseus in what follows punishes the maidservants through Telemachus and the household people, together with Melanthius.",
       glosses: [
         { lemma: "Ἀθήνη", gloss: "Athena" },
         { lemma: "ἑξῆς", gloss: "next, in what follows" },
@@ -2711,7 +2712,7 @@ const ODYSSEY_STORY = {
       titleGr: "Ὀδυσσέως ὑπὸ Πηνελόπης ἀναγνωρισμός",
       titleEn: "Penelope recognizes Odysseus",
       greek: "ἀγγελία Εὐρυκλείας Πηνελόπῃ περὶ τοῦ Ὀδυσσέως καὶ τῆς τῶν μνηστήρων ἀναιρέσεως, ἀναγνωρισμός τε αὐτῆς πρὸς Ὀδυσσέα, καὶ τῶν τῆς πλάνης διηγημάτων ἀνακεφαλαίωσις, καὶ Ὀδυσσέως καὶ Τηλεμάχου μετὰ τῶν οἰκείων ἔξοδος.",
-      english: "Eurycleia tells Penelope; recognition of Odysseus; summary of his wanderings; he and Telemachus go out with their people.",
+      english: "A message of Eurycleia to Penelope concerning Odysseus and the killing of the suitors, and her recognition of Odysseus, and a recapitulation of the narratives of the wandering, and a going-out of Odysseus and Telemachus with the household people.",
       glosses: [
         { lemma: "ἀγγελία", gloss: "message, news" },
         { lemma: "ἀναγνωρισμός", gloss: "recognition (anagnorisis)" },
@@ -2796,7 +2797,7 @@ const ODYSSEY_STORY = {
       titleGr: "νέκυια δευτέρα. σπονδαί",
       titleEn: "Second nekyia; the truce",
       greek: "τὰς τῶν μνηστήρων ψυχὰς Ἑρμῆς εἰς Ἅιδου κατάγει, καὶ ἀναγνωρισμὸς Ὀδυσσέως γίνεται πρὸς τὸν ἑαυτοῦ πατέρα Λαέρτην. καὶ ταραχὴν τοῖς Ἰθακησίοις γεγενημένην ἐπὶ τῇ τῶν μνηστήρων ἀναιρέσει Ἀθηνᾶ κωλύει.",
-      english: "Hermes leads the suitors’ souls to Hades; Odysseus is recognized by Laertes; Athena stops civil strife on Ithaca.",
+      english: "Hermes leads down the souls of the suitors into Hades, and a recognition of Odysseus takes place with his own father Laertes. And Athena prevents a disturbance that had arisen for the Ithacans over the killing of the suitors.",
       glosses: [
         { lemma: "ᾍδης", gloss: "Hades" },
         { lemma: "Ἀθήνη", gloss: "Athena" },

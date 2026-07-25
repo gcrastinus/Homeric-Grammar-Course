@@ -2266,8 +2266,9 @@
         </div>
 
         <div class="story-english-panel">
-          <button type="button" class="btn btn-soft btn-sm" id="story-toggle-en">Show English gist</button>
+          <button type="button" class="btn btn-soft btn-sm" id="story-toggle-en">Show literal English translation</button>
           <div id="story-english" class="story-english" hidden>
+            <p class="story-english-label muted">Literal rendering of the Greek above</p>
             <p>${escapeHtml(book.english)}</p>
           </div>
         </div>
@@ -2290,18 +2291,17 @@
         const open = enBox.hasAttribute("hidden");
         if (open) {
           enBox.removeAttribute("hidden");
-          enBtn.textContent = "Hide English gist";
+          enBtn.textContent = "Hide literal English translation";
         } else {
           enBox.setAttribute("hidden", "");
-          enBtn.textContent = "Show English gist";
+          enBtn.textContent = "Show literal English translation";
         }
       });
     }
-    const tip = app.querySelector("#story-live-tip");
     app.querySelectorAll(".story-word").forEach(btn => {
       btn.addEventListener("click", () => {
+        const wasActive = btn.classList.contains("is-active");
         app.querySelectorAll(".story-word.is-active").forEach(w => w.classList.remove("is-active"));
-        btn.classList.add("is-active");
         let host = app.querySelector("#story-live-tip");
         if (!host) {
           host = document.createElement("div");
@@ -2310,6 +2310,13 @@
           const panel = app.querySelector(".story-greek-panel");
           if (panel) panel.appendChild(host);
         }
+        if (wasActive) {
+          // Second click on the same word clears the highlight and tip
+          host.textContent = "";
+          host.hidden = true;
+          return;
+        }
+        btn.classList.add("is-active");
         host.textContent = btn.getAttribute("data-tip") || "";
         host.hidden = false;
       });
