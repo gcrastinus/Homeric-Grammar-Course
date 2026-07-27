@@ -215,6 +215,12 @@
             <p>Open the Odyssey reader: parallel English and Greek, with every Greek word clickable for forms and vocabulary (new tab).</p>
             <span class="progress-pill">Homer Reader →</span>
           </a>
+          <a class="module-card module-card--link module-card--book-bar"
+             href="https://www.amazon.com/Odyssey-Greek-Reader-Timothy-Lee/dp/1836514069/"
+             target="_blank" rel="noopener noreferrer">
+            <span class="book-bar-label">BOOK: <em>The Odyssey</em> – a Greek reader (hardback)</span>
+            <span class="progress-pill">Amazon →</span>
+          </a>
         </div>
 
         <h3 class="home-section-label">The Journey of Odysseus</h3>
