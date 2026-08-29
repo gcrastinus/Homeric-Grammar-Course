@@ -29,9 +29,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html { font-size: 17px; scroll-behavior: smooth; }
-.si-home{text-align:center;padding:18px 12px 28px;font-size:12px;letter-spacing:.12em;text-transform:uppercase}
-.si-home a{color:var(--ink-soft);text-decoration:none;opacity:.5}
-.si-home a:hover{color:var(--ink-soft);opacity:.7}
+.si-home{text-align:center;padding:18px 12px 28px;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+.si-home a{display:inline-block;padding:8px 18px;border:1px solid var(--mist);border-radius:8px;background:var(--card);color:var(--ink-soft);text-decoration:none}
+.si-home a:hover{color:var(--ink);border-color:var(--ink-soft)}
 
 body {
   font-family: var(--font-body);
