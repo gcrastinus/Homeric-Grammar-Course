@@ -1,8 +1,8 @@
-# Homeric Odyssey — Crash Course App
+# Homeric Odyssey — Crash Course
 
 An interactive, programmed course for students who know **Biblical / NT Greek basics** and want to ramp up quickly to reading Homer’s **Odyssey** (not the Iliad).
 
-## Open the app
+## Open the course
 
 Open `index.html` in a browser, or from this folder:
 
