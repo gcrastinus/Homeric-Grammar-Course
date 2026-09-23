@@ -2715,3 +2715,14 @@ button.module-card {
 [data-theme="dark"] .story-gloss-row {
   border-bottom-color: rgba(255, 255, 255, 0.05);
 }
+
+
+.designer-credit{
+  text-align:center;
+  margin:32px auto 12px;
+  max-width:40rem;
+  font-size:0.9rem;
+  font-style:italic;
+  line-height:1.45;
+  color:var(--ink-soft);
+}

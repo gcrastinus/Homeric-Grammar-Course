@@ -247,6 +247,7 @@
           <p class="muted" style="font-size:0.85rem;margin-top:0.35rem">A single scrollable page of cases, declensions, and λύω — if you want a quick NT review first.</p>
           <p class="mt-1"><button class="btn btn-soft btn-sm" id="reset-progress">Reset local progress</button></p>
         </div>
+        <p class="designer-credit">These sets of exercises were designed by Timothy Kearns, PhD, created and maintained with the assistance of AI, and are extensively revised for clarity and precision.</p>
       </div>
     `, { vocabBtn: false });
   }
