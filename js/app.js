@@ -247,7 +247,7 @@
           <p class="muted" style="font-size:0.85rem;margin-top:0.35rem">A single scrollable page of cases, declensions, and λύω — if you want a quick NT review first.</p>
           <p class="mt-1"><button class="btn btn-soft btn-sm" id="reset-progress">Reset local progress</button></p>
         </div>
-        <p class="designer-credit">These courses of study were designed by Timothy Kearns, PhD, built and maintained with the assistance of AI tools, and are continuously revised for clarity and precision.</p>
+        <p class="designer-credit">Designed and directed by Timothy Kearns, Ph.D. AI tools were used for drafting some of the study sections and for building the interactive exercises and answer keys.</p>
       </div>
     `, { vocabBtn: false });
   }
